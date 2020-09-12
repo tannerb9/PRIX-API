@@ -10,7 +10,7 @@ class RecipeIngredient(models.Model):
     measurement_type = models.ForeignKey(
         MeasurementType, on_delete=models.CASCADE)
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
+    quantity = models.FloatField()
 
     class Meta:
         verbose_name = ("Recipe Ingredient")

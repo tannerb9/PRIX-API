@@ -10,8 +10,8 @@ class Ingredient(models.Model):
     measurement_type = models.ForeignKey(
         MeasurementType, on_delete=models.CASCADE)
     name = models.CharField(max_length=80)
-    purchase_price = models.IntegerField()
-    purchase_quantity = models.IntegerField()
+    purchase_price = models.FloatField()
+    purchase_quantity = models.FloatField()
 
     class Meta:
         verbose_name = ("Ingredient")

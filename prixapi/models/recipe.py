@@ -8,9 +8,9 @@ class Recipe(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     recipe_category = models.ForeignKey(
         RecipeCategory, on_delete=models.CASCADE)
-    batch_sale_price = models.IntegerField()
+    batch_sale_price = models.FloatField()
     name = models.CharField(max_length=80)
-    serving_sale_price = models.IntegerField()
+    serving_sale_price = models.FloatField()
     servings_per_batch = models.IntegerField()
 
     class Meta:

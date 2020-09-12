@@ -14,6 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import include, path
+from prixapi.models import *
 from rest_framework import routers
 from rest_framework.authtoken.views import obtain_auth_token
 
