@@ -1,0 +1,90 @@
+[
+  {
+    "model": "prixapi.measurementtype",
+    "pk": 1,
+    "fields": {
+      "name": "kg"
+    }
+  },
+  {
+    "model": "prixapi.measurementtype",
+    "pk": 2,
+    "fields": {
+      "name": "g"
+    }
+  },
+  {
+    "model": "prixapi.company",
+    "pk": 1,
+    "fields": {
+      "name": "Jade Garden"
+    }
+  },
+  {
+    "model": "prixapi.ingredientcategory",
+    "pk": 1,
+    "fields": {
+      "name": "Sweetener"
+    }
+  },
+  {
+    "model": "prixapi.recipecategory",
+    "pk": 1,
+    "fields": {
+      "name": "Cake"
+    }
+  },
+  {
+    "model": "prixapi.ingredient",
+    "pk": 1,
+    "fields": {
+      "name": "White Sugar",
+      "purchase_price": 10,
+      "purchase_quantity": 15,
+      "ingredient_category_id": 1,
+      "measurement_type_id": 1
+    }
+  },
+  {
+    "model": "prixapi.recipeingredient",
+    "pk": 1,
+    "fields": {
+      "quantity": 200,
+      "recipe_id": 1,
+      "ingredient_id": 1,
+      "measurement_type_id": 2
+    }
+  },
+  {
+    "model": "prixapi.recipe",
+    "pk": 1,
+    "fields": {
+      "name": "Chocolate Cake",
+      "batch_sale_price": 25.0,
+      "serving_sale_price": 3.0,
+      "servings_per_batch": 10,
+      "employee_id": 1,
+      "recipe_category_id": 1
+    }
+  },
+  {
+    "model": "prixapi.employee",
+    "pk": 1,
+    "fields": {
+      "company_id": 1,
+      "user_id": 1,
+      "is_admin": true
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "username": "tanner",
+      "password": "tanner123",
+      "first_name": "tanner",
+      "last_name": "b",
+      "email": "tanner@tanner.com"
+    }
+  }
+]
