@@ -11,7 +11,7 @@ class Ingredient(models.Model):
         MeasurementType, on_delete=models.CASCADE)
     name = models.CharField(max_length=80)
     purchase_price = models.IntegerField()
-    quantity = models.IntegerField()
+    purchase_quantity = models.IntegerField()
 
     class Meta:
         verbose_name = ("Ingredient")
