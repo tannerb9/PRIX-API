@@ -75,5 +75,16 @@
       "user_id": 1,
       "is_admin": true
     }
+  },
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "username": "tanner",
+      "password": "tanner123",
+      "first_name": "tanner",
+      "last_name": "b",
+      "email": "tanner@tanner.com"
+    }
   }
 ]
