@@ -23,12 +23,13 @@ class CompanyView(ViewSet):
     '''CLIENT OF PRIX'''
 
     def create(self, request):
+        '''CREATES INSTANCE OF COMPANY AND SAVES TO DB'''
+
         company = Company()
         company.name = request.data["name"]
         company.save()
 
         serializer = CompanySerializer(company, context={'request': request})
-
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):

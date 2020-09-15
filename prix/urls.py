@@ -19,12 +19,14 @@ from prixapi.models import *
 from rest_framework import routers
 from rest_framework.authtoken.views import obtain_auth_token
 from prixapi.views import register_user, login_user
-from prixapi.views import EmployeeView, UserView, CompanyView
+from prixapi.views import EmployeeView, UserView, CompanyView, IngredientCategoryView
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'users', UserView, 'user')
 router.register(r'employee', EmployeeView, 'employee')
 router.register(r'company', CompanyView, 'company')
+router.register(r'ingredientcategory',
+                IngredientCategoryView, 'ingredientcategory')
 
 urlpatterns = [
     path('', include(router.urls)),
