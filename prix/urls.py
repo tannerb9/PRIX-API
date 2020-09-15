@@ -20,7 +20,7 @@ from rest_framework import routers
 from rest_framework.authtoken.views import obtain_auth_token
 from prixapi.views import register_user, login_user
 from prixapi.views import EmployeeView, UserView, CompanyView
-from prixapi.views import CompanyView, IngredientView
+from prixapi.views import CompanyView, IngredientView, RecipeView
 from prixapi.views import RecipeCategoryView, IngredientCategoryView, MeasurementTypeView
 
 router = routers.DefaultRouter(trailing_slash=False)
@@ -32,6 +32,7 @@ router.register(r'ingredientcategory',
 router.register(r'recipecategory', RecipeCategoryView, 'recipecategory')
 router.register(r'measurementtype', MeasurementTypeView, 'measurementtype')
 router.register(r'ingredient', IngredientView, 'ingredient')
+router.register(r'recipe', RecipeView, 'recipe')
 
 urlpatterns = [
     path('', include(router.urls)),
