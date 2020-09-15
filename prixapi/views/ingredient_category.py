@@ -20,7 +20,7 @@ class IngredientCategorySerializer(serializers.HyperlinkedModelSerializer):
 
 
 class IngredientCategoryView(ViewSet):
-    '''PRIX INGREDIENT CATEGORY'''
+    '''PRIX INGREDIENT CATEGORY ACTIONS'''
 
     def create(self, request):
         '''CREATES INSTANCE OF INGREDIENT CATEGORY AND SAVES TO DB'''
