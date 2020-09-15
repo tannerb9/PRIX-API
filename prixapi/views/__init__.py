@@ -7,3 +7,4 @@ from .recipe_category import RecipeCategoryView
 from .measurement_type import MeasurementTypeView
 from .ingredient import IngredientView
 from .recipe import RecipeView
+from .recipe_ingredient import RecipeIngredientView
