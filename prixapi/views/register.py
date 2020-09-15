@@ -54,6 +54,8 @@ def register_user(request):
         first_name=req_body['first_name'],
         last_name=req_body['last_name']
     )
+    # ??CREATE AND SAVE COMPANY TO DB???
+    # **BUT ONLY WANT COMPANY CREATED WHEN FIRST USER CREATED**
 
     # CREATES AND SAVES EMPLOYEE TO DB
     employee = Employee.objects.create(

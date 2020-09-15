@@ -32,6 +32,7 @@ class EmployeeView(ViewSet):
             serializer = EmployeeSerializer(
                 employee, context={'request': request})
             return Response(serializer.data)
+
         except Exception as ex:
             return HttpResponseServerError(ex)
 
