@@ -2,7 +2,7 @@ from django.http import HttpResponseServerError
 from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
-from prixapi.models import Recipe, RecipeCategory, Employee, Company
+from prixapi.models import Recipe, RecipeCategory, Employee
 
 
 class RecipeSerializer(serializers.HyperlinkedModelSerializer):
