@@ -16,4 +16,5 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
 class UserView(ModelViewSet):
 
+    serializer_class = UserSerializer
     queryset = User.objects.all()
