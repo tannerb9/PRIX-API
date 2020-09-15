@@ -55,6 +55,7 @@ def register_user(request):
         last_name=req_body['last_name']
     )
 
+    # CREATES AND SAVES EMPLOYEE TO DB
     employee = Employee.objects.create(
         company=req_body['company'],
         is_admin=req_body['is_admin'],

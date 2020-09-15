@@ -7,6 +7,9 @@ from .user import UserSerializer
 
 
 class EmployeeSerializer(serializers.HyperlinkedModelSerializer):
+    '''METHOD ARG(PYTHON OBJ) IS CONVERTED TO JSON
+    AND ADDS VIRTUAL PROPERTY(URL) TO RESULTING JSON
+    '''
 
     user = UserSerializer()
 
@@ -21,6 +24,7 @@ class EmployeeSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class EmployeeView(ViewSet):
+    '''LOGIC FOR OPERATIONS THAT CAN BE PERFORMED ON RESOURCE IN API'''
 
     def retrieve(self, request, pk=None):
         try:
