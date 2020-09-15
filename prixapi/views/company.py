@@ -1,7 +1,7 @@
 from django.http import HttpResponseServerError
 from rest_framework import serializers, status
-from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
+from rest_framework.viewsets import ViewSet
 from prixapi.models import Company
 
 
@@ -23,12 +23,13 @@ class CompanyView(ViewSet):
     '''CLIENT OF PRIX'''
 
     def create(self, request):
+        '''CREATES INSTANCE OF COMPANY AND SAVES TO DB'''
+
         company = Company()
         company.name = request.data["name"]
         company.save()
 
         serializer = CompanySerializer(company, context={'request': request})
-
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
