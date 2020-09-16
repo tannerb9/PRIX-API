@@ -1,4 +1,5 @@
 from django.http import HttpResponseServerError
+from django.contrib.auth.models import User
 from rest_framework import serializers, status
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
@@ -42,3 +43,26 @@ class EmployeeView(ViewSet):
         serializer = EmployeeSerializer(
             employees, many=True, context={'request': request})
         return Response(serializer.data)
+
+    def update(self, request, pk=None):
+
+        employee = Employee.objects.get(pk=pk)
+        print("before", employee.user.first_name)  # Tanner
+        employee.user.first_name = request.data['first_name']
+        print("after", employee.user.first_name)  # Jake
+        employee.user.last_name = request.data['last_name']
+        employee.user.email = request.data['email']
+        employee.is_admin = request.data['is_admin']
+        employee.save()
+
+        # user = self.request.auth.user
+
+        # user = User.objects.get(pk=user_id)
+        # user = User.objects.get(user=request.data.user)
+        #user = User.objects.get(pk=request.data['user_id'])
+        #user = User.objects.get(pk=request.data['id'])
+        # print("user", user)
+        current_user = Employee.objects.get(user=request.auth.user)
+        print(current_user.first_name)
+
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
