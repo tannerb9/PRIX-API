@@ -27,6 +27,19 @@ class EmployeeSerializer(serializers.HyperlinkedModelSerializer):
 class EmployeeView(ViewSet):
     '''LOGIC FOR OPERATIONS THAT CAN BE PERFORMED ON RESOURCE IN API'''
 
+    def create(self, request):
+
+        user = User.objects.create_user(
+            first_name=request.data['first_name'],
+            last_name=request.data['last_name'],
+            email=request.data['email'],
+            password=request.data['password']
+        )
+        employee = Employee.objects.create(
+            is_admin=request.data['is_admin'],
+            company=request.data['company']
+        )
+
     def retrieve(self, request, pk=None):
         try:
             employee = Employee.objects.get(pk=pk)
@@ -47,22 +60,13 @@ class EmployeeView(ViewSet):
     def update(self, request, pk=None):
 
         employee = Employee.objects.get(pk=pk)
-        print("before", employee.user.first_name)  # Tanner
-        employee.user.first_name = request.data['first_name']
-        print("after", employee.user.first_name)  # Jake
-        employee.user.last_name = request.data['last_name']
-        employee.user.email = request.data['email']
         employee.is_admin = request.data['is_admin']
         employee.save()
 
-        # user = self.request.auth.user
-
-        # user = User.objects.get(pk=user_id)
-        # user = User.objects.get(user=request.data.user)
-        #user = User.objects.get(pk=request.data['user_id'])
-        #user = User.objects.get(pk=request.data['id'])
-        # print("user", user)
-        current_user = Employee.objects.get(user=request.auth.user)
-        print(current_user.first_name)
+        user = User.objects.get(pk=employee.user.id)
+        user.first_name = request.data['first_name']
+        user.last_name = request.data['last_name']
+        user.email = request.data['email']
+        user.save()
 
         return Response({}, status=status.HTTP_204_NO_CONTENT)
