@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers, status
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
-from prixapi.models import Employee
+from prixapi.models import Employee, Company
 from .user import UserSerializer
 
 
@@ -29,16 +29,21 @@ class EmployeeView(ViewSet):
 
     def create(self, request):
 
+        company = Company.objects.get(pk=request.data['company_id'])
         user = User.objects.create_user(
             first_name=request.data['first_name'],
             last_name=request.data['last_name'],
+            username=request.data['username'],
             email=request.data['email'],
             password=request.data['password']
         )
         employee = Employee.objects.create(
             is_admin=request.data['is_admin'],
-            company=request.data['company']
+            user=user,
+            company=company
         )
+
+        return Response({}, status.HTTP_204_NO_CONTENT)
 
     def retrieve(self, request, pk=None):
         try:
