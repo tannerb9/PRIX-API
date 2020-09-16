@@ -16,7 +16,7 @@ class CompanySerializer(serializers.HyperlinkedModelSerializer):
             view_name='company',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'name')
+        fields = ('id', 'url', 'name', 'owner')
 
 
 class CompanyView(ViewSet):

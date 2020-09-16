@@ -56,6 +56,9 @@ def register_user(request):
     )
     # ??CREATE AND SAVE COMPANY TO DB???
     # **BUT ONLY WANT COMPANY CREATED WHEN FIRST USER CREATED**
+    company = Company.objects.create(
+        name=req_body['name']
+    )
 
     # CREATES AND SAVES EMPLOYEE TO DB
     employee = Employee.objects.create(
@@ -63,6 +66,9 @@ def register_user(request):
         is_admin=req_body['is_admin'],
         user=new_user
     )
+
+    company.employee_id = employee.id
+    company.save()
 
     # USE REST FRAMEWORK'S TOKEN GENERATOR
     token = Token.objects.create(user=new_user)
