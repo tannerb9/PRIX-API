@@ -1,4 +1,5 @@
 from django.http import HttpResponseServerError
+from django.contrib.auth.models import User
 from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
@@ -72,3 +73,21 @@ class RecipeView(ViewSet):
         serializer = RecipeSerializer(
             recipes, many=True, context={'request': request})
         return Response(serializer.data)
+
+    def update(self, request, pk=None):
+
+        employee = Employee.objects.get(pk=request.data['employee_id'])
+
+        recipe_category = RecipeCategory.objects.get(
+            pk=request.data['recipe_category_id'])
+
+        recipe = Recipe.objects.get(pk=pk)
+        recipe.name = request.data['name']
+        recipe.servings_per_batch = request.data['servings_per_batch']
+        recipe.batch_sale_price = request.data['batch_sale_price']
+        recipe.serving_sale_price = request.data['serving_sale_price']
+        recipe.recipe_category = recipe_category
+        recipe.employee = employee
+        recipe.save()
+
+        return Response({}, status=status.HTTP_204_NO_CONTENT)

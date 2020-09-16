@@ -1,8 +1,9 @@
 from django.http import HttpResponseServerError
+from django.contrib.auth.models import User
 from rest_framework import serializers, status
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
-from prixapi.models import Employee
+from prixapi.models import Employee, Company
 from .user import UserSerializer
 
 
@@ -26,6 +27,24 @@ class EmployeeSerializer(serializers.HyperlinkedModelSerializer):
 class EmployeeView(ViewSet):
     '''LOGIC FOR OPERATIONS THAT CAN BE PERFORMED ON RESOURCE IN API'''
 
+    def create(self, request):
+
+        company = Company.objects.get(pk=request.data['company_id'])
+        user = User.objects.create_user(
+            first_name=request.data['first_name'],
+            last_name=request.data['last_name'],
+            username=request.data['username'],
+            email=request.data['email'],
+            password=request.data['password']
+        )
+        employee = Employee.objects.create(
+            is_admin=request.data['is_admin'],
+            user=user,
+            company=company
+        )
+
+        return Response({}, status.HTTP_204_NO_CONTENT)
+
     def retrieve(self, request, pk=None):
         try:
             employee = Employee.objects.get(pk=pk)
@@ -42,3 +61,17 @@ class EmployeeView(ViewSet):
         serializer = EmployeeSerializer(
             employees, many=True, context={'request': request})
         return Response(serializer.data)
+
+    def update(self, request, pk=None):
+
+        employee = Employee.objects.get(pk=pk)
+        employee.is_admin = request.data['is_admin']
+        employee.save()
+
+        user = User.objects.get(pk=employee.user.id)
+        user.first_name = request.data['first_name']
+        user.last_name = request.data['last_name']
+        user.email = request.data['email']
+        user.save()
+
+        return Response({}, status=status.HTTP_204_NO_CONTENT)

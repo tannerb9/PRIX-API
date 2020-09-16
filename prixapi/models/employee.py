@@ -6,7 +6,8 @@ from .company import Company
 class Employee(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    company = models.ForeignKey(
+        Company, on_delete=models.CASCADE, related_name="company")
     is_admin = models.BooleanField()
 
     class Meta:
