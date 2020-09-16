@@ -62,3 +62,21 @@ class IngredientView(ViewSet):
         serializer = IngredientSerializer(
             ingredients, many=True, context={'request': request})
         return Response(serializer.data)
+
+    def update(self, request, pk=None):
+
+        measurement_type = MeasurementType.objects.get(
+            pk=request.data['measurement_type_id'])
+
+        ingredient_category = IngredientCategory.objects.get(
+            pk=request.data['ingredient_category_id'])
+
+        ingredient = Ingredient.objects.get(pk=pk)
+        ingredient.name = request.data['name']
+        ingredient.purchase_price = request.data['purchase_price']
+        ingredient.purchase_quantity = request.data['purchase_quantity']
+        ingredient.measurement_type = measurement_type
+        ingredient.ingredient_category = ingredient_category
+        ingredient.save()
+
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
