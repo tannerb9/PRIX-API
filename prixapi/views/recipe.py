@@ -91,3 +91,14 @@ class RecipeView(ViewSet):
         recipe.save()
 
         return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+    def destroy(self, request, pk=None):
+
+        try:
+            recipe = Recipe.objects.get(pk=pk)
+            recipe.delete()
+
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+        except Recipe.DoesNotExist as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
