@@ -75,3 +75,14 @@ class EmployeeView(ViewSet):
         user.save()
 
         return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+    def destroy(self, request, pk=None):
+
+        try:
+            employee = Employee.objects.get(pk=pk)
+            employee.delete()
+
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+        except Employee.DoesNotExist as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
