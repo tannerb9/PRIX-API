@@ -28,8 +28,10 @@ class RecipeIngredientView(ViewSet):
         '''
 
         recipe = Recipe.objects.get(pk=request.data['recipe_id'])
+
         ingredient = Ingredient.objects.get(
             pk=request.data['ingredient_id'])
+
         measurement_type = MeasurementType.objects.get(
             pk=request.data['measurement_type_id'])
 

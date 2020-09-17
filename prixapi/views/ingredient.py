@@ -75,17 +75,26 @@ class IngredientView(ViewSet):
         Returns: Response -- JSON string of all Ingredient
         instances of a company
 
-        Example GET request:
+        Example GET requests:
         http://localhost:8000/ingredient?company=1
+        http://localhost:8000/ingredient?company=1&ingredientCategory=2
         '''
 
         ingredients = Ingredient.objects.all()
 
         company = self.request.query_params.get('company', None)
+
+        ingredient_category = self.request.query_params.get(
+            'ingredientCategory', None)
+
         if company is not None:
 
             ingredients = Ingredient.objects.filter(
                 employee__company_id=company)
+
+            if ingredient_category is not None:
+                ingredients = Ingredient.objects.filter(
+                    ingredient_category_id=ingredient_category)
 
         serializer = IngredientSerializer(
             ingredients, many=True, context={'request': request})
