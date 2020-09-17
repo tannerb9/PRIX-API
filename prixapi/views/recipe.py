@@ -45,7 +45,7 @@ class RecipeView(ViewSet):
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
-        '''Handle GET request
+        '''Handles GET request
         Returns: Response -- JSON string of a Recipe instance
         '''
 

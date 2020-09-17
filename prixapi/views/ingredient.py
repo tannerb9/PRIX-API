@@ -24,18 +24,22 @@ class IngredientSerializer(serializers.HyperlinkedModelSerializer):
 class IngredientView(ViewSet):
 
     def create(self, request):
+        '''Handles POST request
+        Returns: Reseponse -- JSON string of Ingredient instance
+        '''
 
-        # GETS EMPLOYEE THAT'S SENT WITH REQUEST
+        # Gets employee.id that's sent with request
         employee = Employee.objects.get(pk=request.data['employee_id'])
 
-        # GETS MEASUREMENT TYPE THAT'S SENT WITH REQUEST
+        # Gets measurement_type.id that's sent with request
         measurement_type = MeasurementType.objects.get(
             pk=request.data['measurement_type_id'])
-        # GETS INGREDIENT CATEGORY THAT'S SENT WITH REQUEST
+
+        # Gets ingredient_category.id that's sent with request
         ingredient_category = IngredientCategory.objects.get(
             pk=request.data['ingredient_category_id'])
 
-        # INSTANTIATES AND SAVES INGREDIENT INSTANCE
+        # Instantiates and saves Ingredient instance
         ingredient = Ingredient()
         ingredient.name = request.data['name']
         ingredient.purchase_price = request.data['purchase_price']
@@ -50,6 +54,12 @@ class IngredientView(ViewSet):
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
+        '''Handles GET request
+        Returns: Response -- JSON string of an Ingredient instance
+
+        Example GET request:
+        http://localhost:8000/ingredient/1
+        '''
 
         try:
             ingredient = Ingredient.objects.get(pk=pk)
@@ -61,11 +71,16 @@ class IngredientView(ViewSet):
             return HttpResponseServerError(ex)
 
     def list(self, request):
+        '''Handles GET request
+        Returns: Response -- JSON string of all Ingredient
+        instances of a company
+
+        Example GET request:
+        http://localhost:8000/ingredient?company=1
+        '''
 
         ingredients = Ingredient.objects.all()
 
-        # Example GET request:
-        #   http://localhost:8000/ingredient?company=1
         company = self.request.query_params.get('company', None)
         if company is not None:
 
@@ -77,6 +92,12 @@ class IngredientView(ViewSet):
         return Response(serializer.data)
 
     def update(self, request, pk=None):
+        '''Handles PUT request
+        Returns: Response -- Empty obj and 204 status code
+
+        Example PUT request:
+        http://localhost:8000/ingredient/1
+        '''
 
         measurement_type = MeasurementType.objects.get(
             pk=request.data['measurement_type_id'])
