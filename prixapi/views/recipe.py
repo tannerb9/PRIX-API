@@ -6,10 +6,8 @@ from rest_framework.viewsets import ViewSet
 from prixapi.models import Recipe, RecipeCategory, Employee
 
 
+# Uses hyperlinks(not pks) to represent relations
 class RecipeSerializer(serializers.HyperlinkedModelSerializer):
-    '''JSON SERIALIZER FOR RECIPES
-    ARG: USES HYPERLINKS(NOT PKS) TO REPRESENT RELATIONS
-    '''
     class Meta:
         model = Recipe
         url = serializers.HyperlinkedIdentityField(
@@ -22,10 +20,12 @@ class RecipeSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class RecipeView(ViewSet):
-    '''PRIX RECIPE ACTIONS'''
+    '''Logic for operations that can be performed on API resources'''
 
     def create(self, request):
-        '''CREATES AND SAVES RECIPE TO DB; TIED TO USER'S COMPANY'''
+        '''Handles POST request
+        Returns: Response -- JSON string of a Recipe instance
+        '''
 
         employee = Employee.objects.get(pk=request.data['employee_id'])
 
@@ -45,8 +45,8 @@ class RecipeView(ViewSet):
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
-        '''HANDLE GET REQUEST FOR SINGLE RECIPE
-        RETURNS: RESPONSE -- JSON STRING OF RECIPE INSTANCE
+        '''Handle GET request
+        Returns: Response -- JSON string of a Recipe instance
         '''
 
         try:
@@ -58,16 +58,19 @@ class RecipeView(ViewSet):
             return HttpResponseServerError(ex)
 
     def list(self, request):
-        '''HANDLE GET REQUEST FOR ALL RECIPES
-        RETURNS: RESPONSE -- JSON STRING OF ALL RECIPE INSTANCES
-                RELATED TO A COMPANY
+        '''Handles GET request
+        Returns: Response -- JSON string of all Recipe instances
+        of a company
         '''
 
         recipes = Recipe.objects.all()
-        # EXTRACT COMPANY PARAM FROM REQUEST
+
+        # Example GET request:
+        #   http://localhost:8000/recipe?company=1
         company = self.request.query_params.get('company', None)
         if company is not None:
-            # USES ONE TABLE(EMPLOYEE) TO FILTER ON QUERY PARAM(COMPANY)
+
+            # Usees one table(employee) to filter on query param(company)
             recipes = Recipe.objects.filter(employee__company_id=company)
 
         serializer = RecipeSerializer(
@@ -75,6 +78,9 @@ class RecipeView(ViewSet):
         return Response(serializer.data)
 
     def update(self, request, pk=None):
+        '''Handles PUT request
+        Returns: Response -- Empty obj and 204 status code
+        '''
 
         employee = Employee.objects.get(pk=request.data['employee_id'])
 
@@ -93,6 +99,9 @@ class RecipeView(ViewSet):
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
     def destroy(self, request, pk=None):
+        """Handle DELETE request
+        Returns: Response -- 200 or 404 status code
+        """
 
         try:
             recipe = Recipe.objects.get(pk=pk)
