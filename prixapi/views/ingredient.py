@@ -2,7 +2,8 @@ from django.http import HttpResponseServerError
 from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
-from prixapi.models import Ingredient, MeasurementType, IngredientCategory
+from prixapi.models import Ingredient, Company, Employee
+from prixapi.models import MeasurementType, IngredientCategory
 
 
 class IngredientSerializer(serializers.HyperlinkedModelSerializer):
@@ -21,9 +22,11 @@ class IngredientSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class IngredientView(ViewSet):
-    ''' '''
 
     def create(self, request):
+
+        # GETS EMPLOYEE THAT'S SENT WITH REQUEST
+        employee = Employee.objects.get(pk=request.data['employee_id'])
 
         # GETS MEASUREMENT TYPE THAT'S SENT WITH REQUEST
         measurement_type = MeasurementType.objects.get(
@@ -32,13 +35,14 @@ class IngredientView(ViewSet):
         ingredient_category = IngredientCategory.objects.get(
             pk=request.data['ingredient_category_id'])
 
-        # CREATES AND SAVE INGREDIENT INSTANCE
+        # INSTANTIATES AND SAVES INGREDIENT INSTANCE
         ingredient = Ingredient()
         ingredient.name = request.data['name']
         ingredient.purchase_price = request.data['purchase_price']
         ingredient.purchase_quantity = request.data['purchase_quantity']
         ingredient.measurement_type = measurement_type
         ingredient.ingredient_category = ingredient_category
+        ingredient.employee = employee
         ingredient.save()
 
         serializer = IngredientSerializer(
@@ -59,6 +63,15 @@ class IngredientView(ViewSet):
     def list(self, request):
 
         ingredients = Ingredient.objects.all()
+
+        # Example GET request:
+        #   http://localhost:8000/ingredient?company=1
+        company = self.request.query_params.get('company', None)
+        if company is not None:
+
+            ingredients = Ingredient.objects.filter(
+                employee__company_id=company)
+
         serializer = IngredientSerializer(
             ingredients, many=True, context={'request': request})
         return Response(serializer.data)
