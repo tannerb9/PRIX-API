@@ -70,7 +70,7 @@ class RecipeView(ViewSet):
         company = self.request.query_params.get('company', None)
         if company is not None:
 
-            # Usees one table(employee) to filter on query param(company)
+            # Uses one table(employee) to filter on query param(company)
             recipes = Recipe.objects.filter(employee__company_id=company)
 
         serializer = RecipeSerializer(

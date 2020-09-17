@@ -9,44 +9,43 @@ from .employee import Employee
 
 @csrf_exempt
 def login_user(request):
-    ''' HANDLES USER AUTHENTICATION
-    METHOD ARGS: REQUEST -- THE FULL HTTP REQUEST OBJ
+    ''' Handles User authentication
+    Method arg: Request -- the full HTTP request obj
     '''
 
-    # PARSES JSON STRING INTO PYTHON DICT
+    # Parses JSON string into Python dict
     req_body = json.loads(request.body.decode())
 
-    # IF REQUEST IS HTTP POST, HANDLE VALIDATION
     if request.method == 'POST':
 
-        # USE BUILT-IN 'AUTHENTICATE' METHOD TO VALIDATE CREDS
-        # & RETURNS A USER OBJECT
+        # Use built-in 'authenticate' method to validate credentials
+        # & returns a user object
         username = req_body['username']
         password = req_body['password']
         authenticated_user = authenticate(username=username, password=password)
 
         if authenticated_user is not None:
             token = Token.objects.get(user=authenticated_user)
-            # CONVERTS OBJ TO JSON STRING
+            # Converts obj to JSON string
             data = json.dumps({"valid": True, "token": token.key})
             return HttpResponse(data, content_type='application/json')
 
         else:
-            # INVALID LOGIN CREDS; USER NOT LOGGED IN
+            # Invalid login creds; user not logged in
             data = json.dumps({"valid": False})
             return HttpResponse(data, content_type='application/json')
 
 
 @csrf_exempt
 def register_user(request):
-    '''HANDLES CREATION OF NEW USER FOR AUTH
-    METHOD ARGS: REQUEST -- FULL HTTP REQUEST OBJ
+    '''Handles creation of new User for authentication
+    Method arg: Request -- the full HTTP request obj
     '''
 
-    # PARSES JSON STRING INTO PYTHON DICT
+    # Parses JSON string into Python dict
     req_body = json.loads(request.body.decode())
 
-    # USES DJANGO'S BUILT-IN USER MODEL TO CREATE NEW USER
+    # Use django's built-in User model to create new user
     new_user = User.objects.create_user(
         username=req_body['username'],
         email=req_body['email'],
@@ -55,25 +54,25 @@ def register_user(request):
         last_name=req_body['last_name']
     )
 
-    # CREATES AND SAVES COMPANY TO DB -- EMPLOYEE_ID == NULL
+    # Creates & saves company to DB -- employee_id == NULL
     company = Company.objects.create(
         name=req_body['name']
     )
 
-    # CREATES AND SAVES EMPLOYEE TO DB
+    # Create Employee instance and saves to DB
     employee = Employee.objects.create(
         company=req_body['company'],
         is_admin=req_body['is_admin'],
         user=new_user
     )
 
-    # SAVES NEWLY CREATED EMPLOYEE'S ID TO THE NEW COMPANY INSTANCE
+    # Reassign Company's employee(FK) to above employee's id
     company.employee_id = employee.id
     company.save()
 
-    # USE REST FRAMEWORK'S TOKEN GENERATOR
+    # Django REST framework's built-in token generator
     token = Token.objects.create(user=new_user)
 
-    # RETURN TOKEN TO CLIENT
+    # Return token to client
     data = json.dumps({"token": token.key})
     return HttpResponse(data, content_type='application/json')
