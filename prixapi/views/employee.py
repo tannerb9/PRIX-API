@@ -58,6 +58,11 @@ class EmployeeView(ViewSet):
     def list(self, request):
 
         employees = Employee.objects.all()
+        # Extract company param from request
+        company = self.request.query_params.get('company', None)
+        if company is not None:
+            employees = Employee.objects.filter(company_id=company)
+
         serializer = EmployeeSerializer(
             employees, many=True, context={'request': request})
         return Response(serializer.data)
