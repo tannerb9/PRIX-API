@@ -61,17 +61,23 @@ class RecipeView(ViewSet):
         '''Handles GET request
         Returns: Response -- JSON string of all Recipe instances
         of a company
+
+        Example GET request:
+        http://localhost:8000/recipe?company=1
+        http://localhost:8000/recipe?company=1&recipeCategory=2
         '''
 
         recipes = Recipe.objects.all()
-
-        # Example GET request:
-        #   http://localhost:8000/recipe?company=1
         company = self.request.query_params.get('company', None)
-        if company is not None:
+        recipe_category = self.request.query_params.get('recipeCategory', None)
 
+        if company is not None:
             # Uses one table(employee) to filter on query param(company)
             recipes = Recipe.objects.filter(employee__company_id=company)
+
+            if recipe_category is not None:
+                recipes = Recipe.objects.filter(
+                    recipe_category_id=recipe_category)
 
         serializer = RecipeSerializer(
             recipes, many=True, context={'request': request})
@@ -80,6 +86,9 @@ class RecipeView(ViewSet):
     def update(self, request, pk=None):
         '''Handles PUT request
         Returns: Response -- Empty obj and 204 status code
+
+        Example PUT request:
+        http://localhost:8000/recipe/1
         '''
 
         employee = Employee.objects.get(pk=request.data['employee_id'])
@@ -101,6 +110,9 @@ class RecipeView(ViewSet):
     def destroy(self, request, pk=None):
         """Handle DELETE request
         Returns: Response -- 200 or 404 status code
+
+        Example DELETE request:
+        http://localhost:8000/recipe/1
         """
 
         try:

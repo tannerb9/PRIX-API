@@ -81,9 +81,7 @@ class IngredientView(ViewSet):
         '''
 
         ingredients = Ingredient.objects.all()
-
         company = self.request.query_params.get('company', None)
-
         ingredient_category = self.request.query_params.get(
             'ingredientCategory', None)
 
