@@ -1,14 +1,16 @@
 from django.db import models
+from safedelete.models import SafeDeleteModel, SOFT_DELETE
 from django.contrib.auth.models import User
 from .company import Company
 
 
-class Employee(models.Model):
+class Employee(SafeDeleteModel):
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.DO_NOTHING)
     company = models.ForeignKey(
         Company, on_delete=models.CASCADE, related_name="company")
     is_admin = models.BooleanField()
+    _safedelete_policy = SOFT_DELETE
 
     class Meta:
         verbose_name = ("Employee")

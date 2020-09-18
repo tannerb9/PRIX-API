@@ -72,7 +72,7 @@ class RecipeView(ViewSet):
         recipe_category = self.request.query_params.get('recipeCategory', None)
 
         if company is not None:
-            # Uses one table(employee) to filter on query param(company)
+            # Uses employee table to filter on query param(company)
             recipes = Recipe.objects.filter(employee__company_id=company)
 
             if recipe_category is not None:

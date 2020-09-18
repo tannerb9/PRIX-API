@@ -29,6 +29,9 @@ class EmployeeView(ViewSet):
     def create(self, request):
         '''Handles POST request
         Returns: Response -- JSON string of a User instance
+
+        Example POST request
+        http://localhost:8000/employee
         '''
 
         company = Company.objects.get(pk=request.data['company_id'])
@@ -50,6 +53,9 @@ class EmployeeView(ViewSet):
     def retrieve(self, request, pk=None):
         '''Handle GET request
         Returns: Response -- JSON string of an Employee instance
+
+        Example GET request
+        http://localhost:8000/employee/1
         '''
 
         try:
@@ -65,12 +71,13 @@ class EmployeeView(ViewSet):
         '''Handles GET request
         Returns: Response -- JSON string of all Employee instances
         of a company
+
+        Example GET request:
+        http://localhost:8000/employee?company=1
         '''
 
         employees = Employee.objects.all()
 
-        # Example GET request:
-        #   http://localhost:8000/employee?company=1
         company = self.request.query_params.get('company', None)
         if company is not None:
             employees = Employee.objects.filter(company_id=company)
@@ -82,6 +89,9 @@ class EmployeeView(ViewSet):
     def update(self, request, pk=None):
         '''Handle PUT request
         Returns: Response -- Empty obj and 204 status code
+
+        Example PUT request
+        http://localhost:8000/employee/1
         '''
 
         employee = Employee.objects.get(pk=pk)
@@ -100,6 +110,9 @@ class EmployeeView(ViewSet):
         """Handle DELETE request
         Returns:
             Response -- 200 or 404 status code
+
+        Example DELETE request
+        http://localhost:8000/employee/1
         """
 
         try:
