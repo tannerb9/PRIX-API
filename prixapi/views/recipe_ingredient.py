@@ -7,8 +7,6 @@ from prixapi.models import Ingredient, MeasurementType
 
 
 class RecipeIngredientSerializer(serializers.HyperlinkedModelSerializer):
-    ''' '''
-
     class Meta:
         model = RecipeIngredient
         url = serializers.HyperlinkedIdentityField(
@@ -28,10 +26,8 @@ class RecipeIngredientView(ViewSet):
         '''
 
         recipe = Recipe.objects.get(pk=request.data['recipe_id'])
-
         ingredient = Ingredient.objects.get(
             pk=request.data['ingredient_id'])
-
         measurement_type = MeasurementType.objects.get(
             pk=request.data['measurement_type_id'])
 
@@ -73,8 +69,8 @@ class RecipeIngredientView(ViewSet):
         '''
 
         recipe_ingredients = RecipeIngredient.objects.all()
-
         recipe = self.request.query_params.get('recipe', None)
+
         if recipe is not None:
 
             recipe_ingredients = RecipeIngredient.objects.filter(
@@ -93,10 +89,8 @@ class RecipeIngredientView(ViewSet):
         '''
 
         recipe = Recipe.objects.get(pk=request.data['recipe_id'])
-
         ingredient = Ingredient.objects.get(
             pk=request.data['ingredient_category_id'])
-
         measurement_type = MeasurementType.objects.get(
             pk=request.data['measurement_type_id'])
 
@@ -108,3 +102,20 @@ class RecipeIngredientView(ViewSet):
         recipe_ingredient.save()
 
         return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+    def destroy(self, request, pk=None):
+        """Handle DELETE request
+        Returns: Response -- 204 or 404 status code
+
+        Example DELETE request:
+        http://localhost:8000/recipeingredient/1
+        """
+
+        try:
+            recipe_ingredient = RecipeIngredient.objects.get(pk=pk)
+            recipe_ingredient.delete()
+
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+        except RecipeIngredient.DoesNotExist as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
