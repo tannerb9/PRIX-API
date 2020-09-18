@@ -109,7 +109,7 @@ class RecipeView(ViewSet):
 
     def destroy(self, request, pk=None):
         """Handle DELETE request
-        Returns: Response -- 200 or 404 status code
+        Returns: Response -- 204 or 404 status code
 
         Example DELETE request:
         http://localhost:8000/recipe/1
