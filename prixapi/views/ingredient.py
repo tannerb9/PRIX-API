@@ -17,7 +17,7 @@ class IngredientSerializer(serializers.HyperlinkedModelSerializer):
             lookup_field='id'
         )
         fields = ('id', 'url', 'name', 'purchase_price',
-                  'purchase_quantity', 'measurement_type', 'ingredient_category')
+                  'purchase_quantity', 'measurement_type', 'employee', 'ingredient_category')
         depth = 2
 
 
@@ -106,9 +106,9 @@ class IngredientView(ViewSet):
         http://localhost:8000/ingredient/1
         '''
 
+        employee = Employee.objects.get(pk=request.data['employee_id'])
         measurement_type = MeasurementType.objects.get(
             pk=request.data['measurement_type_id'])
-
         ingredient_category = IngredientCategory.objects.get(
             pk=request.data['ingredient_category_id'])
 
@@ -118,6 +118,7 @@ class IngredientView(ViewSet):
         ingredient.purchase_quantity = request.data['purchase_quantity']
         ingredient.measurement_type = measurement_type
         ingredient.ingredient_category = ingredient_category
+        ingredient.employee = employee
         ingredient.save()
 
         return Response({}, status=status.HTTP_204_NO_CONTENT)
