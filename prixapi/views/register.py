@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.authtoken.models import Token
 from .employee import Employee
+from .company import Company
 
 
 @csrf_exempt
@@ -12,10 +13,10 @@ def login_user(request):
     ''' Handles User authentication
     Method arg: Request -- the full HTTP request obj
     '''
-
+    print("before loads", request)
     # Parses JSON string into Python dict
     req_body = json.loads(request.body.decode())
-
+    print("after loads", req_body)
     if request.method == 'POST':
 
         # Use built-in 'authenticate' method to validate credentials
@@ -41,10 +42,8 @@ def register_user(request):
     '''Handles creation of new User for authentication
     Method arg: Request -- the full HTTP request obj
     '''
-
     # Parses JSON string into Python dict
     req_body = json.loads(request.body.decode())
-
     # Use django's built-in User model to create new user
     new_user = User.objects.create_user(
         username=req_body['username'],
@@ -55,20 +54,20 @@ def register_user(request):
     )
 
     # Creates & saves company to DB -- employee_id == NULL
-    company = Company.objects.create(
-        name=req_body['name']
+    newCompany = Company.objects.create(
+        name=req_body['company']
     )
 
     # Create Employee instance and saves to DB
     employee = Employee.objects.create(
-        company=req_body['company'],
-        is_admin=req_body['is_admin'],
+        company=newCompany,
+        is_admin=True,
         user=new_user
     )
 
     # Reassign Company's employee(FK) to above employee's id
-    company.employee_id = employee.id
-    company.save()
+    newCompany.employee_id = employee.id
+    newCompany.save()
 
     # Django REST framework's built-in token generator
     token = Token.objects.create(user=new_user)
