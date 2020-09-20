@@ -58,7 +58,8 @@ def register_user(request):
         name=req_body['company']
     )
 
-    # Create Employee instance and saves to DB
+    # Creates Employee instance, assigns the new company
+    # to it,and saves to DB
     employee = Employee.objects.create(
         company=newCompany,
         is_admin=True,
