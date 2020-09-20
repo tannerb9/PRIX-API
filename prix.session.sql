@@ -1,3 +1,3 @@
 
-DELETE FROM prixapi_ingredient
-WHERE id = 1
+DELETE FROM prixapi_company
+WHERE id = 3
