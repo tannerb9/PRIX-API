@@ -73,18 +73,16 @@ class EmployeeView(ViewSet):
     def list(self, request):
         '''Handles GET request
         Returns: Response -- JSON string of all Employee instances
-        of a company
+        of logged-in user's company
 
         Example GET request:
-        http://localhost:8000/employee?company=1
+        http://localhost:8000/employee
         '''
 
-        # user = request.auth.user
-        employees = Employee.objects.filter(user=user)
-
-        company = self.request.query_params.get('company', None)
-        if company is not None:
-            employees = Employee.objects.filter(company_id=company)
+        user = request.auth.user
+        employee = Employee.objects.filter(user=user)[0]
+        company = Company.objects.filter(id=employee.company_id)[0]
+        employees = Employee.objects.filter(company_id=company)
 
         serializer = EmployeeSerializer(
             employees, many=True, context={'request': request})
@@ -127,16 +125,3 @@ class EmployeeView(ViewSet):
 
         except Employee.DoesNotExist as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
-
-    @action(methods=['get'], detail=False)
-    def loggedInEmployee(self, request, pk=None):
-
-        try:
-            employee = Employee.objects.get(user=request.auth.user)
-
-            serializer = EmployeeSerializer(
-                employee, context={'request': request})
-            return Response(serializer.data)
-
-        except Exception as ex:
-            return HttpResponseServerError(ex)

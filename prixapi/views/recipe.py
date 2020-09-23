@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
-from prixapi.models import Recipe, RecipeCategory, Employee
+from prixapi.models import Recipe, RecipeCategory, Employee, Company
 
 
 # Uses hyperlinks(not pks) to represent relations
@@ -66,21 +66,20 @@ class RecipeView(ViewSet):
         of a company
 
         Example GET request:
-        http://localhost:8000/recipe?company=1
-        http://localhost:8000/recipe?company=1&recipeCategory=2
+        http://localhost:8000/recipe
+        http://localhost:8000/recipe?recipeCategory=2
         '''
 
-        recipes = Recipe.objects.all()
-        company = self.request.query_params.get('company', None)
+        user = request.auth.user
+        employee = Employee.objects.filter(user=user)[0]
+        company = Company.objects.filter(id=employee.company_id)[0]
+        recipes = Recipe.objects.filter(employee__company_id=company)
+
         recipe_category = self.request.query_params.get('recipeCategory', None)
 
-        if company is not None:
-            # Uses employee table to filter on query param(company)
-            recipes = Recipe.objects.filter(employee__company_id=company)
-
-            if recipe_category is not None:
-                recipes = Recipe.objects.filter(
-                    recipe_category_id=recipe_category)
+        if recipe_category is not None:
+            recipes = Recipe.objects.filter(
+                recipe_category_id=recipe_category)
 
         serializer = RecipeSerializer(
             recipes, many=True, context={'request': request})
