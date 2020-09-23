@@ -2,7 +2,6 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from prixapi.models import Employee
-# from .employee import EmployeeSerializer
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
