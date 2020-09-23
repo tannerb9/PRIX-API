@@ -3,8 +3,10 @@ from django.contrib.auth.models import User
 from rest_framework import serializers, status
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from prixapi.models import Employee, Company
 from .user import UserSerializer
+from .company import CompanySerializer
 
 
 # Method arg(Python obj) is converted to JSON and
@@ -12,6 +14,7 @@ from .user import UserSerializer
 class EmployeeSerializer(serializers.HyperlinkedModelSerializer):
 
     user = UserSerializer()
+    company = CompanySerializer()
 
     class Meta:
         model = Employee
@@ -70,17 +73,16 @@ class EmployeeView(ViewSet):
     def list(self, request):
         '''Handles GET request
         Returns: Response -- JSON string of all Employee instances
-        of a company
+        of logged-in user's company
 
         Example GET request:
-        http://localhost:8000/employee?company=1
+        http://localhost:8000/employee
         '''
 
-        employees = Employee.objects.all()
-
-        company = self.request.query_params.get('company', None)
-        if company is not None:
-            employees = Employee.objects.filter(company_id=company)
+        user = request.auth.user
+        employee = Employee.objects.filter(user=user)[0]
+        company = Company.objects.filter(id=employee.company_id)[0]
+        employees = Employee.objects.filter(company_id=company)
 
         serializer = EmployeeSerializer(
             employees, many=True, context={'request': request})

@@ -73,26 +73,25 @@ class IngredientView(ViewSet):
     def list(self, request):
         '''Handles GET request
         Returns: Response -- JSON string of all Ingredient
-        instances of a company
+        instances of logged-in user's company
 
         Example GET requests:
-        http://localhost:8000/ingredient?company=1
-        http://localhost:8000/ingredient?company=1&ingredientCategory=2
+        http://localhost:8000/ingredient
+        http://localhost:8000/ingredient?ingredientCategory=2
         '''
 
-        ingredients = Ingredient.objects.all()
-        company = self.request.query_params.get('company', None)
+        user = request.auth.user
+        employee = Employee.objects.filter(user=user)[0]
+        company = Company.objects.filter(id=employee.company_id)[0]
+        ingredients = Ingredient.objects.filter(
+            employee__company=company)
+
         ingredient_category = self.request.query_params.get(
             'ingredientCategory', None)
 
-        if company is not None:
-
+        if ingredient_category is not None:
             ingredients = Ingredient.objects.filter(
-                employee__company_id=company)
-
-            if ingredient_category is not None:
-                ingredients = Ingredient.objects.filter(
-                    ingredient_category_id=ingredient_category)
+                ingredient_category_id=ingredient_category)
 
         serializer = IngredientSerializer(
             ingredients, many=True, context={'request': request})
