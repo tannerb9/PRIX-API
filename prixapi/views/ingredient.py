@@ -80,15 +80,19 @@ class IngredientView(ViewSet):
         http://localhost:8000/ingredient?company=1&ingredientCategory=2
         '''
 
+        user = request.auth.user
+        employee = Employee.objects.filter(user=user)[0]
+        company = Company.objects.filter(id=employee.company_id)[0]
+
         ingredients = Ingredient.objects.all()
-        company = self.request.query_params.get('company', None)
+        # company = self.request.query_params.get('company', None)
         ingredient_category = self.request.query_params.get(
             'ingredientCategory', None)
 
         if company is not None:
 
             ingredients = Ingredient.objects.filter(
-                employee__company_id=company)
+                employee__company=company)
 
             if ingredient_category is not None:
                 ingredients = Ingredient.objects.filter(

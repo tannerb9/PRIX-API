@@ -13,10 +13,8 @@ def login_user(request):
     ''' Handles User authentication
     Method arg: Request -- the full HTTP request obj
     '''
-    print("before loads", request)
     # Parses JSON string into Python dict
     req_body = json.loads(request.body.decode())
-    print("after loads", req_body)
     if request.method == 'POST':
 
         # Use built-in 'authenticate' method to validate credentials
@@ -27,6 +25,7 @@ def login_user(request):
 
         if authenticated_user is not None:
             token = Token.objects.get(user=authenticated_user)
+            print(token.user_id)
             # Converts obj to JSON string
             data = json.dumps({"valid": True, "token": token.key})
             return HttpResponse(data, content_type='application/json')

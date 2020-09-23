@@ -3,8 +3,10 @@ from django.contrib.auth.models import User
 from rest_framework import serializers, status
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from prixapi.models import Employee, Company
 from .user import UserSerializer
+from .company import CompanySerializer
 
 
 # Method arg(Python obj) is converted to JSON and
@@ -12,6 +14,7 @@ from .user import UserSerializer
 class EmployeeSerializer(serializers.HyperlinkedModelSerializer):
 
     user = UserSerializer()
+    company = CompanySerializer()
 
     class Meta:
         model = Employee
@@ -76,7 +79,8 @@ class EmployeeView(ViewSet):
         http://localhost:8000/employee?company=1
         '''
 
-        employees = Employee.objects.all()
+        # user = request.auth.user
+        employees = Employee.objects.filter(user=user)
 
         company = self.request.query_params.get('company', None)
         if company is not None:
@@ -123,3 +127,16 @@ class EmployeeView(ViewSet):
 
         except Employee.DoesNotExist as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+
+    @action(methods=['get'], detail=False)
+    def loggedInEmployee(self, request, pk=None):
+
+        try:
+            employee = Employee.objects.get(user=request.auth.user)
+
+            serializer = EmployeeSerializer(
+                employee, context={'request': request})
+            return Response(serializer.data)
+
+        except Exception as ex:
+            return HttpResponseServerError(ex)

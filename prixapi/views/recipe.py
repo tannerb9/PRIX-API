@@ -47,6 +47,9 @@ class RecipeView(ViewSet):
     def retrieve(self, request, pk=None):
         '''Handles GET request
         Returns: Response -- JSON string of a Recipe instance
+
+        Example GET request:
+        http://localhost:8000/recipe/1
         '''
 
         try:
