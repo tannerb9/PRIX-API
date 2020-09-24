@@ -29,7 +29,10 @@ class IngredientView(ViewSet):
         '''
 
         # Gets employee.id that's sent with request
-        employee = Employee.objects.get(pk=request.data['employee_id'])
+        # employee = Employee.objects.get(pk=request.data['employee_id'])
+
+        current_user = request.auth.user
+        current_employee = Employee.objects.filter(user=current_user)[0]
 
         # Gets measurement_type.id that's sent with request
         measurement_type = MeasurementType.objects.get(
@@ -46,7 +49,7 @@ class IngredientView(ViewSet):
         ingredient.purchase_quantity = request.data['purchase_quantity']
         ingredient.measurement_type = measurement_type
         ingredient.ingredient_category = ingredient_category
-        ingredient.employee = employee
+        ingredient.employee = current_employee
         ingredient.save()
 
         serializer = IngredientSerializer(

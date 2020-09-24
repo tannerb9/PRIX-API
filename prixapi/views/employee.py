@@ -37,6 +37,11 @@ class EmployeeView(ViewSet):
         http://localhost:8000/employee
         '''
 
+        # FOR CUSTOM ACTION
+        # current_user = request.auth.user
+        # current_employee = Employee.objects.filter(user=user)[0]
+        # company = Company.objects.filter(id=current_employee.company_id)[0]
+
         company = Company.objects.get(pk=request.data['company_id'])
         user = User.objects.create_user(
             first_name=request.data['first_name'],
