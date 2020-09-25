@@ -85,8 +85,8 @@ class EmployeeView(ViewSet):
         http://localhost:8000/employee
         '''
 
-        user = request.auth.user
-        employee = Employee.objects.filter(user=user)[0]
+        # user = request.auth.user
+        employee = Employee.objects.get(user=request.auth.user)
         company = Company.objects.filter(id=employee.company_id)[0]
         employees = Employee.objects.filter(company_id=company)
 

@@ -17,7 +17,9 @@ class IngredientSerializer(serializers.HyperlinkedModelSerializer):
             lookup_field='id'
         )
         fields = ('id', 'url', 'name', 'purchase_price',
-                  'purchase_quantity', 'measurement_type', 'measurement_type_id', 'employee', 'ingredient_category')
+                  'purchase_quantity', 'measurement_type',
+                  'measurement_type_id', 'employee',
+                  'ingredient_category', 'ingredient_category_id')
         depth = 2
 
 
