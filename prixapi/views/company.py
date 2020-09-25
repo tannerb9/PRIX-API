@@ -6,9 +6,6 @@ from prixapi.models import Company
 
 
 class CompanySerializer(serializers.HyperlinkedModelSerializer):
-    '''JSON SERIALIZER FOR COMPANIES
-    ARG: USES HYPERLINKS(NOT PKs) TO REPRESENT RELATIONS
-    '''
 
     class Meta:
         model = Company
@@ -20,10 +17,14 @@ class CompanySerializer(serializers.HyperlinkedModelSerializer):
 
 
 class CompanyView(ViewSet):
-    '''CLIENT OF PRIX'''
+    '''PRIX Client'''
 
     def create(self, request):
-        '''CREATES INSTANCE OF COMPANY AND SAVES TO DB'''
+        '''Creates instance of company and saves to DB
+
+        Example POST request:
+        http://localhost:8000/company
+        '''
 
         company = Company()
         company.name = request.data["name"]
@@ -33,8 +34,11 @@ class CompanyView(ViewSet):
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
-        '''HANDLE GET REQUEST FOR SINGLE COMPANY
-        RETURNS: RESPONSE -- JSON STRING OF COMPANY INSTANCE
+        '''Handle GET request for a company instance
+        Returns: Response -- JSON string of company instance
+
+        Example GET request:
+        http://localhost:8000/company/1
         '''
 
         try:
@@ -47,6 +51,12 @@ class CompanyView(ViewSet):
             return HttpResponseServerError(ex)
 
     def list(self, request):
+        '''Handle GET request for all company instances
+        Returns: Response -- JSON string of all company instances
+
+        Example GET request:
+        http://localhost:8000/company
+        '''
 
         companies = Company.objects.all()
         serializer = CompanySerializer(

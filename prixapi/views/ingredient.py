@@ -28,9 +28,7 @@ class IngredientView(ViewSet):
         Returns: Reseponse -- JSON string of Ingredient instance
         '''
 
-        # Gets employee.id that's sent with request
-        # employee = Employee.objects.get(pk=request.data['employee_id'])
-
+        # Gets current user and finds associated employee
         user = request.auth.user
         employee = Employee.objects.filter(user=user)[0]
 

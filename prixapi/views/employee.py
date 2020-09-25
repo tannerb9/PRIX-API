@@ -42,13 +42,6 @@ class EmployeeView(ViewSet):
         employee = Employee.objects.filter(user=user)[0]
         company = Company.objects.filter(id=employee.company_id)[0]
 
-        # is_admin = request.data['is_admin']
-
-        # if is_admin == "true":
-        #     is_admin = True
-        # else:
-        #     is_admin = False
-
         new_user = User.objects.create_user(
             first_name=request.data['first_name'],
             last_name=request.data['last_name'],
