@@ -102,8 +102,14 @@ class EmployeeView(ViewSet):
         http://localhost:8000/employee/1
         '''
 
+        adminStatus = request.data['is_admin']
+        if adminStatus == "true":
+            adminStatus = True
+        else:
+            adminStatus = False
+
         employee = Employee.objects.get(pk=pk)
-        employee.is_admin = request.data['is_admin']
+        employee.is_admin = adminStatus
         employee.save()
 
         user = User.objects.get(pk=employee.user.id)
