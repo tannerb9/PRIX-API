@@ -27,7 +27,8 @@ class RecipeView(ViewSet):
         Returns: Response -- JSON string of a Recipe instance
         '''
 
-        employee = Employee.objects.get(pk=request.data['employee_id'])
+        user = request.auth.user
+        employee = Employee.objects.filter(user=user)
 
         recipe_category = RecipeCategory.objects.get(
             pk=request.data['recipe_category_id'])

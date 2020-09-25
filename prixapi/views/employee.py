@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from prixapi.models import Employee, Company
 from .user import UserSerializer
+from rest_framework.authtoken.models import Token
 from .company import CompanySerializer
 
 
@@ -37,8 +38,11 @@ class EmployeeView(ViewSet):
         http://localhost:8000/employee
         '''
 
-        company = Company.objects.get(pk=request.data['company_id'])
-        user = User.objects.create_user(
+        user = request.auth.user
+        employee = Employee.objects.filter(user=user)[0]
+        company = Company.objects.filter(id=employee.company_id)[0]
+
+        new_user = User.objects.create_user(
             first_name=request.data['first_name'],
             last_name=request.data['last_name'],
             username=request.data['username'],
@@ -47,9 +51,11 @@ class EmployeeView(ViewSet):
         )
         employee = Employee.objects.create(
             is_admin=request.data['is_admin'],
-            user=user,
+            user=new_user,
             company=company
         )
+
+        token = Token.objects.create(user=new_user)
 
         return Response({}, status.HTTP_204_NO_CONTENT)
 
@@ -79,8 +85,8 @@ class EmployeeView(ViewSet):
         http://localhost:8000/employee
         '''
 
-        user = request.auth.user
-        employee = Employee.objects.filter(user=user)[0]
+        # user = request.auth.user
+        employee = Employee.objects.get(user=request.auth.user)
         company = Company.objects.filter(id=employee.company_id)[0]
         employees = Employee.objects.filter(company_id=company)
 
@@ -96,8 +102,14 @@ class EmployeeView(ViewSet):
         http://localhost:8000/employee/1
         '''
 
+        adminStatus = request.data['is_admin']
+        if adminStatus == "true":
+            adminStatus = True
+        else:
+            adminStatus = False
+
         employee = Employee.objects.get(pk=pk)
-        employee.is_admin = request.data['is_admin']
+        employee.is_admin = adminStatus
         employee.save()
 
         user = User.objects.get(pk=employee.user.id)

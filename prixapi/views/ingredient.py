@@ -17,7 +17,9 @@ class IngredientSerializer(serializers.HyperlinkedModelSerializer):
             lookup_field='id'
         )
         fields = ('id', 'url', 'name', 'purchase_price',
-                  'purchase_quantity', 'measurement_type', 'employee', 'ingredient_category')
+                  'purchase_quantity', 'measurement_type',
+                  'measurement_type_id', 'employee',
+                  'ingredient_category', 'ingredient_category_id')
         depth = 2
 
 
@@ -28,8 +30,9 @@ class IngredientView(ViewSet):
         Returns: Reseponse -- JSON string of Ingredient instance
         '''
 
-        # Gets employee.id that's sent with request
-        employee = Employee.objects.get(pk=request.data['employee_id'])
+        # Gets current user and finds associated employee
+        user = request.auth.user
+        employee = Employee.objects.filter(user=user)[0]
 
         # Gets measurement_type.id that's sent with request
         measurement_type = MeasurementType.objects.get(
@@ -105,7 +108,9 @@ class IngredientView(ViewSet):
         http://localhost:8000/ingredient/1
         '''
 
-        employee = Employee.objects.get(pk=request.data['employee_id'])
+        user = request.auth.user
+        employee = Employee.objects.filter(user=user)[0]
+
         measurement_type = MeasurementType.objects.get(
             pk=request.data['measurement_type_id'])
         ingredient_category = IngredientCategory.objects.get(
@@ -121,3 +126,20 @@ class IngredientView(ViewSet):
         ingredient.save()
 
         return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+    def destroy(self, request, pk=None):
+        """Handle DELETE request
+        Returns: Response -- 204 or 404 status code
+
+        Example DELETE request:
+        http://localhost:8000/ingredient/1
+        """
+
+        try:
+            ingredient = Ingredient.objects.get(pk=pk)
+            ingredient.delete()
+
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+        except Ingredient.DoesNotExist as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
