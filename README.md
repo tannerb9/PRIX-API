@@ -1,6 +1,5 @@
 <div align="center">
-<h1>PRIX</h1>
-PRIX's REST API
+<h2>PRIX's REST API</h2>
 </div>
 
 <!-- #### Key Features:
@@ -13,11 +12,12 @@ PRIX's REST API
 
 #### To Run
 
-1. From this repo's home page, click the green **Code** button.
-2. On the dropdown menu, click the **Use SSH** link and copy the provided URL.
-3. In the terminal, execute **git clone _paste SSH url here_**.
-<!-- 4. Cd into **prix-api/src/api** and open **DataManager.js**. Change the **remoteURL** variable to your local API\* server's url and save.
-4. From the root directory, execute **npm start**. -->
+1. Clone the PRIX API repo to your machine
+2. Cd into prix-api
+3. Execute <code>python -m venv PrixEnv</code>
+4. Execute <code>source ./PrixEnv/bin/activate</code>
+5. Execute <code>pip install -r requirements.txt</code>
+6. In **settings.py** add 'prixapi' to the 'INSTALLED APPS' list
 
 \*Be sure to [visit the PRIX-client repo](https://github.com/tannerb9/PRIX-client) to set up the client-side app.
 
