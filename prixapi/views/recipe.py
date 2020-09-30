@@ -25,11 +25,12 @@ class RecipeView(ViewSet):
     def create(self, request):
         '''Handles POST request
         Returns: Response -- JSON string of a Recipe instance
+
+        Example POST request:
+        http://localhost:8000/recipe
         '''
 
-        user = request.auth.user
-        employee = Employee.objects.filter(user=user)
-
+        employee = Employee.objects.get(user=request.auth.user)
         recipe_category = RecipeCategory.objects.get(
             pk=request.data['recipe_category_id'])
 
